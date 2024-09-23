@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 public class IndexWorker implements Runnable{
     private final File[] files;
-    private static final Logger logger = Logger.getLogger(IndexWorker.class.getName());
 
     public IndexWorker(File[] files) {
         this.files = files;
@@ -18,7 +17,6 @@ public class IndexWorker implements Runnable{
     public IndexWorker(File file) {
         this.files = new File[]{file};
     }
-
 
     @Override
     public void run() {
@@ -67,7 +65,7 @@ public class IndexWorker implements Runnable{
                 }
             }
         } catch (Exception e) {
-            logger.warning(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         // Update global index with the local index

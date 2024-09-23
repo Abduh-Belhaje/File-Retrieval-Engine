@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
 /*
     Using Singleton pattern to have a shared IndexStore
     between the App thread and the HttpServer Thread
@@ -27,6 +26,9 @@ public class IndexStore {
         return indexStore;
     }
 
+    public Map<String, Map<String, Integer>> getGlobalIndex(){
+        return globalIndex;
+    }
 
     // Method to update the global index with a local index from a worker thread
     public void updateIndex(String fileName ,Map<String, Map<String, Integer>> localIndex) {
@@ -48,6 +50,7 @@ public class IndexStore {
                 });
             }
         } finally {
+            System.out.println("adding indexed file : " + fileName);
             indexLock.unlock();
         }
     }
