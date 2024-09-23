@@ -1,3 +1,2 @@
 java programming language
-java java Java JaVa
-programming programming programming
+java
