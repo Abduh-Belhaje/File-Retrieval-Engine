@@ -44,4 +44,4 @@ The File Retrieval Engine follows an Application Layering architecture, which in
    
 4. Run the application:
    ```bash
-   java -jar target/File-Retrieval-Engine-1.0-SNAPSHOT.jar 4 src/main/java/resources/config.json
+   java -jar target/File-Retrieval-Engine-1.0-SNAPSHOT.jar <nbOfThreads> src/main/java/resources/config.json
