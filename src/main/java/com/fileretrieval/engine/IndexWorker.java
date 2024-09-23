@@ -69,7 +69,7 @@ public class IndexWorker implements Runnable{
         }
 
         // Update global index with the local index
-        mergeWithGlobalIndex(file.getName(), localIndex);
+        mergeWithGlobalIndex(localIndex);
     }
 
     // Extract words/terms from a line of text (split by non-alphanumeric characters)
@@ -78,8 +78,8 @@ public class IndexWorker implements Runnable{
         return line.toLowerCase().split("\\W+");
     }
 
-    private void mergeWithGlobalIndex(String fileName,Map<String, Map<String, Integer>> localIndex){
-        IndexStore.getInstance().updateIndex(fileName,localIndex);
+    private void mergeWithGlobalIndex(Map<String, Map<String, Integer>> localIndex){
+        IndexStore.getInstance().updateIndex(localIndex);
     }
 
 }

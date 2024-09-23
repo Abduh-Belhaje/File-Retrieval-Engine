@@ -83,7 +83,6 @@ public class ProcessingEngine implements Engine{
             if (executorService.awaitTermination(1, TimeUnit.HOURS)) {
                 // All tasks finished, perform final action
                 System.out.println("All indexing tasks completed. Now performing final action...");
-                IndexStore.getInstance().printIndex();
             } else {
                 System.err.println("Timeout reached before all indexing tasks were completed.");
             }
@@ -101,6 +100,8 @@ public class ProcessingEngine implements Engine{
         // Step 1: Check if each term exists in the index and collect the document maps
         List<Map<String, Integer>> termDocumentMaps = new ArrayList<>();
         termDocumentMaps = findIndexTerms(terms,termDocumentMaps);
+
+        if(termDocumentMaps.isEmpty()) return new ArrayList<>();
 
         // Step 2: Find common documents (AND query) and calculate scores for the matching documents
         Map<String, Integer> docFrequencySum = new HashMap<>();

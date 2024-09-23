@@ -5,63 +5,80 @@ import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/*
-    Using Singleton pattern to have a shared IndexStore
-    between the App thread and the HttpServer Thread
+/**
+ * Singleton class to manage a shared global index between application threads
+ * and the HTTP server thread. It provides thread-safe updates to the index.
  */
 public class IndexStore {
-    private static IndexStore indexStore;
+    private static IndexStore instance;
     private final Map<String, Map<String, Integer>> globalIndex = new HashMap<>();
-    // Lock to ensure thread safety during updates to the global index
-    private final Lock indexLock ;
+    private final Lock indexLock = new ReentrantLock();
 
-    private IndexStore() {
-        indexLock = new ReentrantLock();
-    }
+    // Private constructor to prevent instantiation
+    private IndexStore() {}
 
-    public static IndexStore getInstance(){
-        if(indexStore == null){
-            indexStore = new IndexStore();
+    /**
+     * Returns the singleton instance of IndexStore.
+     *
+     * @return IndexStore instance
+     */
+    public static IndexStore getInstance() {
+        if (instance == null) {
+            synchronized (IndexStore.class) { // Ensure thread-safe lazy initialization
+                if (instance == null) {
+                    instance = new IndexStore();
+                }
+            }
         }
-        return indexStore;
+        return instance;
     }
 
-    public Map<String, Map<String, Integer>> getGlobalIndex(){
+    /**
+     * Returns the global index map.
+     *
+     * @return the global index
+     */
+    public Map<String, Map<String, Integer>> getGlobalIndex() {
         return globalIndex;
     }
 
-    // Method to update the global index with a local index from a worker thread
-    public void updateIndex(String fileName ,Map<String, Map<String, Integer>> localIndex) {
-        indexLock.lock();
+    /**
+     * Updates the global index with a local index from a worker thread.
+     *
+     * @param localIndex the local index to merge
+     */
+    public void updateIndex(Map<String, Map<String, Integer>> localIndex) {
+        indexLock.lock(); // Lock for updating the global index
         try {
-            for (Map.Entry<String, Map<String, Integer>> entry : localIndex.entrySet()) {
-
-                String term = entry.getKey();
-                Map<String, Integer> localDocMap = entry.getValue();
-
-                globalIndex.merge(term, localDocMap, (globalDocMap, newLocalDocMap) -> {
-                    for (Map.Entry<String, Integer> docEntry : newLocalDocMap.entrySet()) {
-                        String doc = docEntry.getKey();
-                        int frequency = docEntry.getValue();
-                        // Update the frequency if the document already exists
-                        globalDocMap.merge(doc, frequency, Integer::sum);
-                    }
-                    return globalDocMap;
-                });
-            }
+            localIndex.forEach((term, localDocMap) -> {
+                globalIndex.merge(term, localDocMap, this::mergeDocumentMaps);
+            });
         } finally {
-            System.out.println("adding indexed file : " + fileName);
-            indexLock.unlock();
+            indexLock.unlock(); // Ensure the lock is released
         }
     }
 
+    /**
+     * Merges two document frequency maps.
+     *
+     * @param globalDocMap the existing document map in the global index
+     * @param newLocalDocMap the new document map to merge
+     * @return the merged document map
+     */
+    private Map<String, Integer> mergeDocumentMaps(Map<String, Integer> globalDocMap, Map<String, Integer> newLocalDocMap) {
+        newLocalDocMap.forEach((doc, frequency) ->
+                globalDocMap.merge(doc, frequency, Integer::sum));
+        return globalDocMap;
+    }
+
+    /**
+     * Prints the current state of the global index.
+     */
     public void printIndex() {
-        for (Map.Entry<String, Map<String, Integer>> entry : globalIndex.entrySet()) {
-            System.out.println("Term: " + entry.getKey());
-            for (Map.Entry<String, Integer> docEntry : entry.getValue().entrySet()) {
-                System.out.println("  Document: " + docEntry.getKey() + " | Frequency: " + docEntry.getValue());
-            }
-        }
+        globalIndex.forEach((term, docMap) -> {
+            System.out.println("Term: " + term);
+            docMap.forEach((doc, frequency) ->
+                    System.out.println("  Document: " + doc + " | Frequency: " + frequency));
+        });
     }
-
 }
