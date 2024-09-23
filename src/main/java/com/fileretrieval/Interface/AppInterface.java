@@ -3,6 +3,7 @@ package com.fileretrieval.Interface;
 import com.fileretrieval.engine.Engine;
 import com.fileretrieval.engine.ProcessingEngine;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class AppInterface {
         System.out.println("index < dataset path > : build an index from those files");
         System.out.println("search < AND query > : returns all the files that contain all the terms from the" +
                 " AND query");
-        System.out.println("quit :  quit the application");
+        System.out.println("quit :  quit the application \n");
     }
 
     public void start(){
@@ -34,7 +35,7 @@ public class AppInterface {
             String[] params = input.isEmpty() ? null : input.split(" ");
             switch (Objects.requireNonNull(params)[0]){
                 case "index" -> processingEngine.index(params[1]);
-                case "search" -> System.out.println("search");
+                case "search" -> processingEngine.search(params).forEach(System.out::println);
                 case "quit" -> System.exit(1);
                 default -> System.out.println("Not supported !");
             }
