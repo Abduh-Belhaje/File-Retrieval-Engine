@@ -5,6 +5,7 @@
 - [Features](#features)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
+- [Installation](#installation)
 - [Usage](#usage)
 
 ## Introduction
@@ -30,18 +31,88 @@ The File Retrieval Engine follows an Application Layering architecture, which in
 - Maven (for dependency management and building the project)
 
 ### Installation
+
 1. Clone the repository:
+   
    ```bash
    git clone https://github.com/Abduh-Belhaje/File-Retrieval-Engine.git
 
-2. Navigate to the project directory:
+3. Navigate to the project directory:
+   
    ```bash
    cd File-Retrieval-Engine
 
-3. Build the project using Maven:
+5. Build the project using Maven:
+   
    ```bash
    mvn clean install
-   
-4. Run the application:
+
+### Usage
+
+- Run the application:
+  
    ```bash
    java -jar target/File-Retrieval-Engine-1.0-SNAPSHOT.jar <nbOfThreads> src/main/java/resources/config.json
+
+### 2. Using the App Interface
+
+The File Retrieval Engine provides a command-line app interface for interacting with the program. 
+
+- Indexing Files :
+   
+  ```bash
+  index ./DataSet
+
+- Searching Files:
+  
+  ```bash
+  search term1 AND term2 AND ....
+
+
+### 2. Using the REST API
+
+The File Retrieval Engine exposes a REST API for programmatic access. This allows you to perform file indexing and search operations over HTTP.
+
+> **Note**: The server must be running before making requests to the API. By default, the API runs at `http://localhost:8080`.
+
+#### Endpoints:
+
+- #### **Index Files**  
+  `POST /index`  
+  Index files located in the specified directory.
+
+     **Request Body (JSON)**:
+  
+        {
+          "directoryPath": "/path/to/directory"
+        }
+
+     **Response (JSON)**:
+ 
+       {
+         "message":"Indexing complete",
+         "timestamp":"2024-09-24T08:31:55.897677900"
+       }
+
+
+- #### **Search Files**  
+  `POST /search`  
+  search for files based on a query string
+
+     **Request Body (JSON)**:
+  
+         {
+           "query":"term1 AND term2"
+         } 
+                
+   
+     **Response (JSON)**:
+    
+       {
+         "top_files":["file3.txt","file1.txt"],
+         "timestamp":"2024-09-24T08:35:25.709470"
+      }
+
+
+
+
