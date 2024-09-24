@@ -101,11 +101,11 @@ The File Retrieval Engine exposes a REST API for programmatic access. This allow
   search for files based on a query string
 
      **Request Body (JSON)**:
-     
         ```json
-        {
+         {
            "query":"term1 AND term2"
-        }
+         } 
+                
    
      **Response (JSON)**:
     
