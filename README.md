@@ -82,14 +82,12 @@ The File Retrieval Engine exposes a REST API for programmatic access. This allow
 
      **Request Body (JSON)**:
   
-        ```json
         {
           "directoryPath": "/path/to/directory"
         }
 
      **Response (JSON)**:
  
-      ```json
        {
          "message":"Indexing complete",
          "timestamp":"2024-09-24T08:31:55.897677900"
@@ -101,7 +99,7 @@ The File Retrieval Engine exposes a REST API for programmatic access. This allow
   search for files based on a query string
 
      **Request Body (JSON)**:
-        ```json
+  
          {
            "query":"term1 AND term2"
          } 
@@ -109,7 +107,6 @@ The File Retrieval Engine exposes a REST API for programmatic access. This allow
    
      **Response (JSON)**:
     
-       ```json
        {
          "top_files":["file3.txt","file1.txt"],
          "timestamp":"2024-09-24T08:35:25.709470"
