@@ -26,7 +26,7 @@ public class ProcessingEngine implements Engine{
             System.err.println("No folders found in the specified path: " + path);
             return;
         }
-
+        long startTime = System.currentTimeMillis(); // Record start time
         int numFolders = folders.length;
         if(numFolders >= numThreads){
             startPartition(numFolders,folders);
@@ -52,7 +52,7 @@ public class ProcessingEngine implements Engine{
                 }
             });
         }
-        waitForTasks();
+        waitForTasks(startTime);
     }
 
     private void ProcessWithMinimumThreads(int numFolders , File[] files){
@@ -75,7 +75,7 @@ public class ProcessingEngine implements Engine{
         executorService.shutdown();  // Signal that no more tasks will be added
     }
 
-    private void waitForTasks(){
+    private void waitForTasks(long startTime){
         // Wait for all threads to finish
         try {
             System.out.println("Waiting for all indexing tasks to complete...");
@@ -83,6 +83,9 @@ public class ProcessingEngine implements Engine{
             if (executorService.awaitTermination(1, TimeUnit.HOURS)) {
                 // All tasks finished, perform final action
                 System.out.println("All indexing tasks completed. Now performing final action...");
+                long endTime = System.currentTimeMillis(); // Record end time
+                long duration = endTime - startTime; // Calculate duration in milliseconds
+                System.out.println("Indexing time: " + (duration / 1000.0) + " seconds");
             } else {
                 System.err.println("Timeout reached before all indexing tasks were completed.");
             }

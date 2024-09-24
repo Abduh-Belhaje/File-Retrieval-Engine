@@ -67,7 +67,6 @@ public class IndexWorker implements Runnable{
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         // Update global index with the local index
         mergeWithGlobalIndex(localIndex);
     }
