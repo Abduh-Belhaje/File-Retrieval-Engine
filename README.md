@@ -5,6 +5,7 @@
 - [Features](#features)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
+- [Installation](#installation)
 - [Usage](#usage)
 
 ## Introduction
@@ -46,7 +47,7 @@ The File Retrieval Engine follows an Application Layering architecture, which in
    ```bash
    mvn clean install
 
-### Installation
+### Usage
 
 - Run the application:
   
